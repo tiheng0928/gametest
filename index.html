@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.io Game</title>
+	<meta charset="UTF-8" />
+	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  </head>
+  
+  <body>
+	<a>
+	<script>
+		var socket = io.connect();
+		
+		socket.on('user fulled', function(){
+			alert('full');
+			window.location.replace('localhost:3000/full.html');
+		});
+	</script>
+	
+	
+	<button onclick="location.href='/play.html'">PLAY</button>
+	
+    </a>
+  </body>
+</html>

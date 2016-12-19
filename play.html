@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.io Game</title>
+	<meta charset="UTF-8" />
+   
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src='//code.jquery.com/jquery-2.1.4.min.js'></script>
+    <script>
+      var socket = io();
+      $(document).ready(function(){
+        var name = prompt("請輸入名字","player");
+        if(name=="" || name==null){
+          name = "player";
+        }
+        //tell server
+        socket.emit("add user",name);
+		
+        //監聽消息
+        
+        socket.on('add user',function(data){
+			appendMessage(data.username+"已進入遊戲");
+        });
+        socket.on('user left',function(data){
+			appendMessage(data.username+"已離開遊戲");
+        });
+		
+		$(document).ready(function(){
+			$('.play').click(function(){
+				//$('.play').hide();
+				//$('#picture_space').show();
+				socket.emit('gamestart');
+				socket.on('ghostready',function(qq){
+					console.log('FKU');
+					$('.play').hide();
+					$('#picture_space').show();
+				});
+			});
+		});
+		
+		
+		
+		var value;
+		
+		$('.button').click(function() {
+			console.log('click');
+			value = $(this).attr('value');
+			console.log(value);
+			socket.emit('click_button',value);
+		});
+		
+		socket.on('click_',function(data){
+			console.log(data);
+				appendMessage(data.username+'按下了'+data.val);
+				$('#'+data.val).attr('disabled', true);
+				//e.preventDefault();
+			});
+		socket.on('gameover',function(overdata){
+			appendMessage(overdata.username+'按到了鬼牌'+overdata.val);
+			alert('遊戲結束!');
+			location.replace('localhost:3000/play.html');
+		})
+		
+		function appendMessage(msg){
+          $('#messages').append($('<li>').text(msg));
+          var message = document.getElementById("message_block");
+          message.scrollTop = message.scrollHeight;
+        
+      }
+	});
+      
+    </script>
+  </head>
+  <body>
+	<script>
+		
+	</script>
+	<button class='play'>PLAY</button>
+  
+  <div id="message_block">
+    <ul id="messages"></ul>
+	
+  <div id="picture_space" style='display:none;'>
+    <ul id="123" style="list-style:none;float:left;">
+		<li style="width:25px;height:25px;"><button class='button' id='1' value='1' style="width:25px;height:25px;margin-bottom:10px;">1</button></li>
+		<li style="width:25px;height:25px;"><button class='button' id='2' value='2' style="width:25px;height:25px;margin-bottom:10px;">2</button></li>
+		<li style="width:25px;height:25px;"><button class='button' id='3' value='3' style="width:25px;height:25px;margin-bottom:10px;">3</button></li>
+	</ul>
+	<ul id="456" style="list-style:none;float:left;">
+		<li style="width:25px;height:25px;"><button class='button' id='4' value='4' style="width:25px;height:25px;margin-bottom:10px;">4</button></li>
+		<li style="width:25px;height:25px;"><button class='button' id='5' value='5' style="width:25px;height:25px;margin-bottom:10px;">5</button></li>
+		<li style="width:25px;height:25px;"><button class='button' id='6' value='6' style="width:25px;height:25px;margin-bottom:10px;">6</button></li>
+	</ul>
+	<ul id="789" style="list-style:none;float:left;">
+		<li style="width:25px;height:25px;"><button class='button' id='7' value='7' style="width:25px;height:25px;margin-bottom:10px;">7</button></li>
+		<li style="width:25px;height:25px;"><button class='button' id='8' value='8' style="width:25px;height:25px;margin-bottom:10px;">8</button></li>
+		<li style="width:25px;height:25px;"><button class='button' id='9' value='9' style="width:25px;height:25px;margin-bottom:10px;">9</button></li>
+	</ul>
+	
+  
+  </body>
+</html>
